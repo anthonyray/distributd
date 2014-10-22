@@ -24,31 +24,28 @@ public class Connect
 	public static void main(String... args) throws IOException, InterruptedException
 	{
 		
+		List<String> hosts = new Hostsreader().getHostsList();
+				
+		List<RemoteAliveJob> jobs = new ArrayList<RemoteAliveJob>();
 		
-		List<RemoteJob> jobs = new ArrayList<RemoteJob>();
-		
-		// Initialize array
-		
-		for (int i = 0 ; i < 10 ; i++){
-			jobs.add(new RemoteJob("thread" + Integer.toString(i)) );
-			
+		// Initialize array of jobs from the hosts array
+		for (String host : hosts){
+			jobs.add(new RemoteAliveJob("job_"+host, host));
 		}
 		
 		// Launch threads
 		
 		for (int i = 0 ; i < jobs.size() ; i++){
 			jobs.get(i).start();
-
 		}
+		
+		// Define rendez-vous point
+	
 		for (int i = 0 ; i < jobs.size() ; i++){
 			jobs.get(i).join();
-		}
+		}		
 		
 		System.out.println("Done !");
-
-		
-		
-		
 		
 		/*final SSHClient ssh = new SSHClient();
 		ssh.addHostKeyVerifier(new PromiscuousVerifier());
