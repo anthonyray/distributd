@@ -25,12 +25,12 @@ public class Connect
 	{
 		
 		List<String> hosts = new Hostsreader().getHostsList();
-				
+		Host hosts_status = new Host();
 		List<RemoteAliveJob> jobs = new ArrayList<RemoteAliveJob>();
 		
 		// Initialize array of jobs from the hosts array
 		for (String host : hosts){
-			jobs.add(new RemoteAliveJob("job_"+host, host));
+			jobs.add(new RemoteAliveJob("job_"+host, host,hosts_status));
 		}
 		
 		// Launch threads
@@ -46,6 +46,7 @@ public class Connect
 		}		
 		
 		System.out.println("Done !");
+		hosts_status.describe();
 		
 		/*final SSHClient ssh = new SSHClient();
 		ssh.addHostKeyVerifier(new PromiscuousVerifier());
