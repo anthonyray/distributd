@@ -3,6 +3,14 @@ package parallel;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.common.IOUtils;
+import net.schmizz.sshj.connection.channel.direct.Session;
+import net.schmizz.sshj.connection.channel.direct.Session.Command;
+import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 
 public class RemoteAliveJob implements Runnable{
 	
@@ -25,6 +33,32 @@ public class RemoteAliveJob implements Runnable{
 			
 			synchronized (hosts_status){ // Putting the status of the host in the data structure shared among threads.
 				hosts_status.setHostReachability(hostname,status);
+			}
+			
+			final SSHClient ssh = new SSHClient();
+			ssh.addHostKeyVerifier(new PromiscuousVerifier());
+			
+			ssh.connect(hostname);
+			
+			try {
+				ssh.authPublickey(System.getProperty("user.name"));
+				final Session session = ssh.startSession();
+				
+				try {
+					Random rand = new Random();
+					int randomNum = rand.nextInt((5 - 1) + 1) + 1;
+					final Command cmd = session.exec("sleep "+Integer.toString(randomNum) +" s");
+					System.out.println(IOUtils.readFully(cmd.getInputStream()).toString());
+					cmd.join(5, TimeUnit.SECONDS);
+				} 
+				
+				finally {
+					session.close();
+				}
+			} 
+			
+			finally {
+				ssh.disconnect();
 			}
 			
 		}

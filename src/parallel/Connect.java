@@ -39,7 +39,7 @@ public class Connect
 			jobs.get(i).start();
 		}
 		
-		// Define rendez-vous point
+		// Define "rendez-vous" point
 	
 		for (int i = 0 ; i < jobs.size() ; i++){
 			jobs.get(i).join();
@@ -48,31 +48,7 @@ public class Connect
 		System.out.println("Done !");
 		hosts_status.describe();
 		
-		/*final SSHClient ssh = new SSHClient();
-		ssh.addHostKeyVerifier(new PromiscuousVerifier());
-		//ssh.loadKnownHosts();
 		
-		ssh.connect("joffrey");
-		
-		try {
-			ssh.authPublickey(System.getProperty("user.name"));
-			final Session session = ssh.startSession();
-			
-			try {
-				final Command cmd = session.exec("ping -c 1 google.com");
-				System.out.println(IOUtils.readFully(cmd.getInputStream()).toString());
-				cmd.join(5, TimeUnit.SECONDS);
-				System.out.println("\n** exit status: " + cmd.getExitStatus());
-			} 
-			
-			finally {
-				session.close();
-			}
-		} 
-		
-		finally {
-			ssh.disconnect();
-		}*/
 	}
 }
 
