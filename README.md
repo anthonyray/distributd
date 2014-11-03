@@ -1,4 +1,4 @@
 distributd
 ==========
 
-Executing remote jar on a cluster of computers using SSH
+Very simple implementation of Hadoop using SSH and NFS. 
